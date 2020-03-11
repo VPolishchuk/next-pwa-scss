@@ -1,65 +1,41 @@
-const withPlugins = require("next-compose-plugins");
+const path = require('path');
+const glob = require('glob');
 const withSass = require('@zeit/next-sass');
-const withCSS = require("@zeit/next-css");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserJSPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-////////////////////////////////////////////////////////
-const devMode = process.env.NODE_ENV !== 'production';
 
-const nextConfig = {
-  // webpack(config, options) {
-  //   config.module.rules.push({
-  //     test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-  //     use: {
-  //         loader: 'url-loader',
-  //         options: {
-  //             limit: 100000
-  //         }
-  //     }
-  //   });
-
-  // return config;
-  // }
-  optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
-      filename: devMode ? '[name].css' : '[name].[hash].css',
-      chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
-    }),
-  ],
-  module: {
-    rules: [
+module.exports = {
+  webpack: (config, { dev }) => {
+    config.module.rules.push(
       {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              // only enable hot in development
-              hmr: process.env.NODE_ENV === 'development',
-              // if hmr does not work, this is a forceful method.
-              reloadAll: true,
- 
-            },
-          },
-          'css-loader',
-          'postcss-loader',
-          'sass-loader',
-        ],
+        test: /\.(css|scss)/,
+        loader: 'emit-file-loader',
+        options: {
+          name: 'dist/[path][name].[ext]'
+        }
       },
-    ],
-  },
-}
+      {
+        test: /\.css$/,
+        use: ['babel-loader', 'raw-loader', 'postcss-loader']
+      },
+      {
+        test: /\.s(a|c)ss$/,
+        use: [
+          'babel-loader',
+          'raw-loader',
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: ['scss', 'node_modules']
+                .map(d => path.join(__dirname, d))
+                .map(g => glob.sync(g))
+                .reduce((a, c) => a.concat(c), [])
+            }
+          }
+        ]
+      }
+    );
+    return config;
+  }
+};
 
-module.exports = withPlugins(
-   [
-    withCSS,
-    withSass
-   ],
-   nextConfig
-);
+module.exports = withSass();

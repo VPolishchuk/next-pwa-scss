@@ -1,5 +1,5 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
-//////////////////////////////////////////////////////////////////////////////
+import Document, { Html, Head, Main, NextScript } from 'next/document'
+/// ///////////////////////////////////////////////////////////////////////////
 class MyDocument extends Document {
   // static async getInitialProps(ctx) {
   //   // const initialProps = await Document.getInitialProps(ctx)
@@ -8,12 +8,12 @@ class MyDocument extends Document {
   //   // return { ...initialProps }
   // }
 
-  render() {
+  render () {
     return (
       <Html lang='en'>
         <Head>
-          <meta name='viewport' content="width=device-width, initial-scale=1" />
-          <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+          <meta name='viewport' content='width=device-width, initial-scale=1' />
+          <meta httpEquiv='Content-Type' content='text/html; charset=utf-8' />
 
           <meta name='application-name' content='PWA App' />
           <meta name='apple-mobile-web-app-capable' content='yes' />
@@ -48,7 +48,7 @@ class MyDocument extends Document {
           <meta property='og:site_name' content='PWA App' />
           <meta property='og:url' content='https://yourdomain.com' />
           <meta property='og:image' content='https://yourdomain.com/public/static/icons/apple-touch-icon.png' /> */}
-          
+
         </Head>
         <body>
           <Main />
@@ -59,4 +59,4 @@ class MyDocument extends Document {
   }
 }
 
-export default MyDocument;
+export default MyDocument
